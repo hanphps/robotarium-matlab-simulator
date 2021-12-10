@@ -19,4 +19,11 @@ else
     addpath(path)
 end
 
+path = genpath('analysis');
+if(isempty(path))
+    disp('WARNING: Cannot find patch_generation directory.  This script should be run from the base directory.')
+    
+else
+    addpath(path)
+end
 addpath('./')
