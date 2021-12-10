@@ -11,6 +11,8 @@ After r.debug(), run r.analyze() to display current profiles
 - User choses what analysis is taking place
 - Analysis between specifc agents
 
+---
+
 # NEW VERSION
 
 The simulator has been updated to work with the brand new GRITSBot X!  Gains accross the utilities have changes.  **Please check out the examples to update your own code.**
