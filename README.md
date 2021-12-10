@@ -1,3 +1,16 @@
+# FORKED VERSION
+
+The simulator now has general analysis capabilities. Velocity, position, and variance profiles have been added. Simply add 'Analysis',true flag when initializing your Robotarium model.
+
+After r.debug(), run r.analyze() to display current profiles
+
+<strong> AS OF LAST COMMIT YOU CANNOT UPLOAD ANY .M USING EXTRA ANALYSIS STYNTAX TO ROBOTARIUM. MAKE SURE TO REMOVE ANALYSIS FLAGS AND R.ANALYZE() BEFORE UPLOADING TO ROBOTARIUM</strong>
+
+## To Do:
+- Fix plot labels/titles
+- User choses what analysis is taking place
+- Analysis between specifc agents
+
 # NEW VERSION
 
 The simulator has been updated to work with the brand new GRITSBot X!  Gains accross the utilities have changes.  **Please check out the examples to update your own code.**
