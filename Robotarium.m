@@ -7,9 +7,13 @@ classdef Robotarium < ARobotarium
     properties (GetAccess = private, SetAccess = private)
         checked_poses_already = false % Whether GET_POSES has been checked this iteration
         called_step_already = true % Whether STEP has been called this iteration
-        
+       
         iteration = 0; % How many times STEP has been called
         errors = {}; % Accumulated errors for the simulation
+        
+        %Analysis stuff
+        do_analysis = false;
+        velocity_history=struct('dt',0,'v_x',[],'v_y',[],'x',[],'y',[],'theta',[]);
     end
 
     methods
@@ -39,6 +43,7 @@ classdef Robotarium < ARobotarium
             parser.addParameter('ShowFigure', true);
             parser.addParameter('FigureHandle', []);
             parser.addParameter('InitialConditions', []);
+            parser.addParameter('Analysis', false);
                         
             parse(parser, varargin{:})
             
@@ -56,6 +61,10 @@ classdef Robotarium < ARobotarium
             end
             
             assert(all(size(initial_conditions) == [3, this.number_of_robots]), 'Initial conditions must be 3 x %i', this.number_of_robots);            
+            
+            % Set Analysis
+            this.do_analysis = parser.Results.Analysis;
+            this.velocity_history.dt = this.time_step;
             
             % Call initialize during initialization
             this.initialize(initial_conditions);
@@ -126,7 +135,17 @@ classdef Robotarium < ARobotarium
             if(this.show_figure)
                 this.draw_robots();
                 uistack([this.robot_handle{:}],'top');
-            end            
+            end 
+            
+            
+            if this.do_analysis
+                this.velocity_history.v_x = [this.velocity_history.v_x; this.velocities(1,:)];
+                this.velocity_history.v_y = [this.velocity_history.v_y; this.velocities(2,:)];
+                this.velocity_history.x = [this.velocity_history.x; this.poses(1, :)];
+                this.velocity_history.y = [this.velocity_history.y; this.poses(2, :)];
+                this.velocity_history.theta = [this.velocity_history.y; this.poses(3, :)];
+            end
+            
         end
         
         function debug(this)
@@ -153,7 +172,16 @@ classdef Robotarium < ARobotarium
                 fprintf('No errors in your simulation!  Acceptance of experiment likely.\n')               
             else
                 fprintf('Please fix the noted errors in your simulation; otherwise, your experiment may be rejected.\n');
-            end            
+            end
+            
         end
+        
+        function analyze(this, varargin)
+
+            assert(this.do_analysis, 'Anaylsis was not enabled for this simulation');
+
+            perform_analysis(this.velocity_history);
+            
+        end 
     end
 end
